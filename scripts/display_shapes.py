@@ -17,7 +17,13 @@ pressure_handler = MockPressureHandler()
 # graphics_handler.draw_static()
 
 while True:
-    # pressure = random.uniform(-5, 5)
     pressures = pressure_handler.measure()
-    # graphics_handler.draw(pressure)
     graphics_handler.draw(pressures)
+
+    buttons = minitft.buttons
+    if buttons.left:
+        print("Button LEFT!")
+        pressure_handler.calibrate()
+
+    if buttons.a:
+        print("Button A!")

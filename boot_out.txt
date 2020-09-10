@@ -1,1 +1,2 @@
 Adafruit CircuitPython 6.0.0-alpha.3 on 2020-08-28; Adafruit Feather M4 Express with samd51j19
+boot.py output:

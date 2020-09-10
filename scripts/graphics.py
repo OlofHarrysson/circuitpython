@@ -37,16 +37,16 @@ PURPLE = 0xFF00FF
 BLACK = 0x0
 ORANGE = 0xFF8000
 BLUE = 0x0080FF
+RED = 0xFF0000
 
-BAR_RANGE = 10  # min=-5, max=+5
+# The range for the pressure bar values
+BAR_MIN = -5
+BAR_MAX = 5
 
 FONT = bitmap_font.load_font("/fonts/Helvetica-Bold-16.bdf")
 
 # TODO NOTES
-# Different color if pressure is outside of bar
-# Press joystick to calibrate
 # Save and read from file. Write after calibrate and read on startup
-
 
 class Bar:
     ''' Graphics that shows the difference in pressure as a bar '''
@@ -62,14 +62,19 @@ class Bar:
         self.right = PointRect(p1, p2, fill=0x0, outline=PURPLE, stroke=2)
 
     def change_value(self, value):
-        width = int(value / BAR_RANGE * SCREEN_WIDTH)
+        # Orange color for normal cases and red otherwise
+        color = ORANGE
+        if value < BAR_MIN or value > BAR_MAX:
+            color = RED
+
+        width = int(value / (abs(BAR_MIN) + BAR_MAX) * SCREEN_WIDTH)
         if value >= 0:
             p1 = BOTTOM_MIDDLE + (0, -self.height)
             p2 = BOTTOM_MIDDLE + (width, 0)
-            self.filled = PointRect(p1, p2, fill=ORANGE)
+            self.filled = PointRect(p1, p2, fill=color, outline=color)
         else:
             p1 = BOTTOM_MIDDLE + (width, -self.height)
-            self.filled = PointRect(p1, BOTTOM_MIDDLE, fill=ORANGE)
+            self.filled = PointRect(p1, BOTTOM_MIDDLE, fill=color, outline=color)
 
 
 class GraphicsHandler:
@@ -83,20 +88,25 @@ class GraphicsHandler:
 
         self.bar = Bar()
         self.static_graphics = self.make_static_graphics()
+        self.add_to_screen(self.static_graphics)
 
     def draw(self, values):
         dynamic_graphics = self.make_dynamic_graphics(values)
-
-        # Draw the graphics to the screen
-        graphics = self.static_graphics + dynamic_graphics
-        for graphic in graphics:
-            self.splash.append(graphic)
+        self.add_to_screen(dynamic_graphics)
 
         time.sleep(1)  # TODO: Make it stay on screen some other way
         self.clear_screen()
 
-    def clear_screen(self):
-        while len(self.splash) > 0:
+    def add_to_screen(self, graphics):
+      for graphic in graphics:
+        self.splash.append(graphic)
+
+    def clear_screen(self, only_dynamic=True):
+        nbr_to_keep = 0
+        if only_dynamic:
+          nbr_to_keep = len(self.static_graphics)
+
+        while len(self.splash) > nbr_to_keep:
             self.splash.pop()
 
     def make_static_graphics(self):
@@ -106,11 +116,11 @@ class GraphicsHandler:
 
         # Draw bar range text
         point1 = BOTTOM_LEFT + (0, -25)
-        textarea1 = make_text("-5", point1, color=GREEN)
+        textarea1 = make_text(str(BAR_MIN), point1, color=GREEN)
         graphics.append(textarea1)
 
         point2 = BOTTOM_RIGHT + (-20, -25)
-        textarea2 = make_text("+5", point2, color=PURPLE)
+        textarea2 = make_text(f'+{BAR_MAX}', point2, color=PURPLE)
         graphics.append(textarea2)
         return graphics
 
