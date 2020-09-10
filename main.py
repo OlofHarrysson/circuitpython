@@ -18,8 +18,10 @@ import scripts.display_shapes
 
 # import scripts.temp_pressure
 
-# import scripts.pressure_example
+#import scripts.pressure_example
 
 #import scripts.screen_menu
 
 # import scripts.calibrate
+
+#import scripts.i2ctest

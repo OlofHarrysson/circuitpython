@@ -35,7 +35,7 @@ BOTTOM_MIDDLE = Point(int(SCREEN_WIDTH / 2), SCREEN_HEIGHT)
 GREEN = 0x00ff00
 PURPLE = 0xFF00FF
 BLACK = 0x0
-ORANGE = 0xFF8000
+YELLOW = 0xFFFF00
 BLUE = 0x0080FF
 RED = 0xFF0000
 
@@ -62,8 +62,8 @@ class Bar:
         self.right = PointRect(p1, p2, fill=0x0, outline=PURPLE, stroke=2)
 
     def change_value(self, value):
-        # Orange color for normal cases and red otherwise
-        color = ORANGE
+        # YELLOW color for normal cases and red otherwise
+        color = YELLOW
         if value < BAR_MIN or value > BAR_MAX:
             color = RED
 
@@ -94,8 +94,6 @@ class GraphicsHandler:
         dynamic_graphics = self.make_dynamic_graphics(values)
         self.add_to_screen(dynamic_graphics)
 
-        time.sleep(1)  # TODO: Make it stay on screen some other way
-        self.clear_screen()
 
     def add_to_screen(self, graphics):
       for graphic in graphics:
@@ -140,9 +138,9 @@ class GraphicsHandler:
         points = [
             TOP_LEFT + (0, 10),
             TOP_RIGHT + (-80, 10),
-            Point(int(SCREEN_WIDTH / 2) - 40, 30),
+            Point(int(SCREEN_WIDTH / 2) - 40, 40),
         ]
-        colors = [BLUE, BLUE, ORANGE]
+        colors = [BLUE, BLUE, YELLOW]
 
         # Add texts
         for text, point, color in zip(texts, points, colors):
@@ -162,7 +160,7 @@ def make_text(text, point, color=PURPLE):
     return text_area
 
 
-def PointRect(p1, p2, fill=BLUE, outline=ORANGE, stroke=2):
+def PointRect(p1, p2, fill=BLUE, outline=YELLOW, stroke=2):
     width = p2.x - p1.x
     height = p2.y - p1.y
 
