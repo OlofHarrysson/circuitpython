@@ -39,15 +39,11 @@ YELLOW = 0xFFFF00
 WHITE = 0xFFFFFF
 RED = 0xFF0000
 
-# The range for the pressure bar values
-BAR_MIN = -5
-BAR_MAX = 5
+# The range for the pressure bar values. Must be symetric
+BAR_MAX = 9
+BAR_MIN = -BAR_MAX
 
 FONT = bitmap_font.load_font("/fonts/Helvetica-Bold-16.bdf")
-
-# TODO NOTES
-# Save and read from file. Write after calibrate and read on startup
-
 
 class Bar:
     ''' Graphics that shows the difference in pressure as a bar '''
@@ -63,7 +59,7 @@ class Bar:
         self.right = PointRect(p1, p2, fill=0x0, outline=PURPLE, stroke=2)
 
     def change_value(self, value):
-        # YELLOW color for normal cases and red otherwise
+        # Yellow color for normal cases and red otherwise
         color = YELLOW
         if value < BAR_MIN or value > BAR_MAX:
             color = RED
@@ -82,6 +78,7 @@ class Bar:
 
 
 class GraphicsHandler:
+    ''' Handler to interact with the display '''
     def __init__(self, minitft):
         self.minitft = minitft
         self.display = minitft.display
@@ -96,18 +93,16 @@ class GraphicsHandler:
 
     def draw(self, values):
         dynamic_graphics = self.make_dynamic_graphics(values)
+        self.clear_screen()
+        self.add_to_screen(self.static_graphics)
         self.add_to_screen(dynamic_graphics)
 
     def add_to_screen(self, graphics):
         for graphic in graphics:
             self.splash.append(graphic)
 
-    def clear_screen(self, only_dynamic=True):
-        nbr_to_keep = 0
-        if only_dynamic:
-            nbr_to_keep = len(self.static_graphics)
-
-        while len(self.splash) > nbr_to_keep:
+    def clear_screen(self):
+        while len(self.splash) > 0:
             self.splash.pop()
 
     def make_static_graphics(self):

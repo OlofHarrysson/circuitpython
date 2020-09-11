@@ -28,7 +28,7 @@ class PressureHandler:
         self.sensor1.value = False
         self.sensor2.value = False
         reset.value = True
-        time.sleep(0.001)  # Wait small time before measuring
+        time.sleep(0.01)  # Wait small time before measuring
         mbar = self.mpr.pressure
         return mbar
 
@@ -44,7 +44,6 @@ class PressureHandler:
         return p1, p2, diff
 
     def calibrate(self):
-        print("CALIBRATING")
         p1s = []
         p2s = []
         for _ in range(self.calibration_points):
@@ -59,19 +58,4 @@ class PressureHandler:
 
         self.pressure_offset_1 = sum(p1s) / len(p1s)
         self.pressure_offset_2 = sum(p2s) / len(p2s)
-        print("Pressure offsets", self.pressure_offset_1,
-              self.pressure_offset_2)
 
-
-class MockPressureHandler(PressureHandler):
-    ''' Can be used to return random pressures in the same fashion as the normal one '''
-    def __init__(self, i2c):
-        self.calibration_points = 20
-        self.calibration_delay = 0.01  # In seconds
-        self.sensor1, self.sensor2 = None, None
-        self.calibrate()
-
-    def measure_sensor(self, reset):
-        time.sleep(0.001)  # Wait small time before measuring
-        mbar = random.randint(994, 1011)
-        return mbar
