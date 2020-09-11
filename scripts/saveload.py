@@ -6,7 +6,8 @@ import digitalio
 import adafruit_sdcard
 import storage
 
-spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
+# spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
+spi = board.SPI()
 cs = digitalio.DigitalInOut(board.D10)
 
 sdcard = adafruit_sdcard.SDCard(spi, cs)

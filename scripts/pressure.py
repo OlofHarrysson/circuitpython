@@ -5,8 +5,6 @@ import digitalio
 
 import adafruit_mprls
 
-# reset1.value = False  #Reset 1
-# sensor2.value = False  #Reset 2
 
 class PressureHandler:
     def __init__(self, i2c):
@@ -17,10 +15,10 @@ class PressureHandler:
         self.calibration_delay = 0.01  # In seconds
 
         # Used to disable one sensor while measuring from the other
-        self.sensor1 = digitalio.DigitalInOut(board.D10)  # Drive to Ground to reset
+        self.sensor1 = digitalio.DigitalInOut(board.D11)
         self.sensor1.direction = digitalio.Direction.OUTPUT
 
-        self.sensor2 = digitalio.DigitalInOut(board.D12)  # Drive to Ground to reset
+        self.sensor2 = digitalio.DigitalInOut(board.D12)
         self.sensor2.direction = digitalio.Direction.OUTPUT
 
         # Find pressure offsets
@@ -30,10 +28,9 @@ class PressureHandler:
         self.sensor1.value = False
         self.sensor2.value = False
         reset.value = True
-        time.sleep(0.001) # Wait small time before measuring
+        time.sleep(0.001)  # Wait small time before measuring
         mbar = self.mpr.pressure
         return mbar
-
 
     def measure(self):
         p1 = self.measure_sensor(self.sensor1)
@@ -60,9 +57,10 @@ class PressureHandler:
             # Wait until next measure point
             time.sleep(self.calibration_delay)
 
-        self.pressure_offset_1 = sum(p1s) / len(p1s) 
-        self.pressure_offset_2 = sum(p2s) / len(p2s) 
-        print("Pressure offsets", self.pressure_offset_1, self.pressure_offset_2)
+        self.pressure_offset_1 = sum(p1s) / len(p1s)
+        self.pressure_offset_2 = sum(p2s) / len(p2s)
+        print("Pressure offsets", self.pressure_offset_1,
+              self.pressure_offset_2)
 
 
 class MockPressureHandler(PressureHandler):
@@ -73,8 +71,7 @@ class MockPressureHandler(PressureHandler):
         self.sensor1, self.sensor2 = None, None
         self.calibrate()
 
-
     def measure_sensor(self, reset):
-        time.sleep(0.001) # Wait small time before measuring
+        time.sleep(0.001)  # Wait small time before measuring
         mbar = random.randint(994, 1011)
         return mbar

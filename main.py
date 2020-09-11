@@ -14,7 +14,8 @@ Only one program should be run so make sure to comment out the other programs wi
 
 #import scripts.leds
 
-#import scripts.display_shapes
+import scripts.display_shapes
+#import scripts.saveload
 
 # import scripts.temp_pressure
 
@@ -25,5 +26,3 @@ Only one program should be run so make sure to comment out the other programs wi
 # import scripts.calibrate
 
 #import scripts.i2ctest
-
-import scripts.saveload

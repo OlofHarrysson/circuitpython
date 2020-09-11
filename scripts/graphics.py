@@ -36,7 +36,7 @@ GREEN = 0x00ff00
 PURPLE = 0xFF00FF
 BLACK = 0x0
 YELLOW = 0xFFFF00
-BLUE = 0x0080FF
+WHITE = 0xFFFFFF
 RED = 0xFF0000
 
 # The range for the pressure bar values
@@ -47,6 +47,7 @@ FONT = bitmap_font.load_font("/fonts/Helvetica-Bold-16.bdf")
 
 # TODO NOTES
 # Save and read from file. Write after calibrate and read on startup
+
 
 class Bar:
     ''' Graphics that shows the difference in pressure as a bar '''
@@ -74,7 +75,10 @@ class Bar:
             self.filled = PointRect(p1, p2, fill=color, outline=color)
         else:
             p1 = BOTTOM_MIDDLE + (width, -self.height)
-            self.filled = PointRect(p1, BOTTOM_MIDDLE, fill=color, outline=color)
+            self.filled = PointRect(p1,
+                                    BOTTOM_MIDDLE,
+                                    fill=color,
+                                    outline=color)
 
 
 class GraphicsHandler:
@@ -94,15 +98,14 @@ class GraphicsHandler:
         dynamic_graphics = self.make_dynamic_graphics(values)
         self.add_to_screen(dynamic_graphics)
 
-
     def add_to_screen(self, graphics):
-      for graphic in graphics:
-        self.splash.append(graphic)
+        for graphic in graphics:
+            self.splash.append(graphic)
 
     def clear_screen(self, only_dynamic=True):
         nbr_to_keep = 0
         if only_dynamic:
-          nbr_to_keep = len(self.static_graphics)
+            nbr_to_keep = len(self.static_graphics)
 
         while len(self.splash) > nbr_to_keep:
             self.splash.pop()
@@ -140,7 +143,7 @@ class GraphicsHandler:
             TOP_RIGHT + (-80, 10),
             Point(int(SCREEN_WIDTH / 2) - 40, 40),
         ]
-        colors = [BLUE, BLUE, YELLOW]
+        colors = [WHITE, WHITE, YELLOW]
 
         # Add texts
         for text, point, color in zip(texts, points, colors):
@@ -160,7 +163,7 @@ def make_text(text, point, color=PURPLE):
     return text_area
 
 
-def PointRect(p1, p2, fill=BLUE, outline=YELLOW, stroke=2):
+def PointRect(p1, p2, fill=WHITE, outline=YELLOW, stroke=2):
     width = p2.x - p1.x
     height = p2.y - p1.y
 
