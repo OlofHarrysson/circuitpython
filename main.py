@@ -16,6 +16,7 @@ Only one program should be run so make sure to comment out the other programs wi
 
 import scripts.display_shapes
 #import scripts.saveload
+#import scripts.set_time
 
 # import scripts.temp_pressure
 
