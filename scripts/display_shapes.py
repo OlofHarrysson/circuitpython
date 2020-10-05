@@ -9,9 +9,6 @@ from scripts.graphics import GraphicsHandler, make_text, Point
 from scripts.pressure import PressureHandler
 from scripts.storage import StorageHandler
 
-# TODO: Set the clock to current date. Or get date somehow
-# Read, write file. Offset1, 2 and the date
-
 print("START PROGRAM")
 spi = board.SPI()
 i2c = board.I2C()
@@ -35,6 +32,6 @@ while True:
         graphics_handler.add_to_screen([text])
         dp1, dp2 = pressure_handler.calibrate()
         storage_handler.save_pressure_offsets(dp1, dp2)
-        time.sleep(2) # Let text stay on display for a while
+        time.sleep(2)  # Let text stay on display for a while
 
     time.sleep(1 / update_frequency)

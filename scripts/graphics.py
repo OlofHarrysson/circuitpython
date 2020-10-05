@@ -45,6 +45,7 @@ BAR_MIN = -BAR_MAX
 
 FONT = bitmap_font.load_font("/fonts/Helvetica-Bold-16.bdf")
 
+
 class Bar:
     ''' Graphics that shows the difference in pressure as a bar '''
     def __init__(self, height=15):
@@ -159,6 +160,7 @@ def make_text(text, point, color=PURPLE):
 
 
 def PointRect(p1, p2, fill=WHITE, outline=YELLOW, stroke=2):
+    ''' A wrapper function to create a rectangle from two points '''
     width = p2.x - p1.x
     height = p2.y - p1.y
 

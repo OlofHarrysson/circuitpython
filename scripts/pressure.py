@@ -8,8 +8,9 @@ import adafruit_mprls
 from scripts.graphics import Point
 
 # Points for the optimal pressure
-P1 = Point(0.5, -3) # Top left point. X,y
-P2 = Point(12.8, -13.3) # Bottom right point
+P1 = Point(0.5, -3)  # Top left point. x,y
+P2 = Point(12.8, -13.3)  # Bottom right point
+
 
 class PressureHandler:
     def __init__(self, i2c, pressure_offset_1, pressure_offset_2):
@@ -28,14 +29,6 @@ class PressureHandler:
         self.sensor2 = digitalio.DigitalInOut(board.D12)
         self.sensor2.direction = digitalio.Direction.OUTPUT
 
-    def measure_sensor(self, reset):
-        self.sensor1.value = False
-        self.sensor2.value = False
-        reset.value = True
-        time.sleep(0.01)  # Wait small time before measuring
-        mbar = self.mpr.pressure
-        return mbar
-
     def measure(self):
         p1 = self.measure_sensor(self.sensor1)
         p2 = self.measure_sensor(self.sensor2)
@@ -47,7 +40,17 @@ class PressureHandler:
         diff = shortest_distance(p1, p2)
         return p1, p2, diff
 
+    def measure_sensor(self, sensor):
+        ''' Measure the pressure at a sensor '''
+        self.sensor1.value = False
+        self.sensor2.value = False
+        sensor.value = True
+        time.sleep(0.01)  # Wait small time before measuring
+        mbar = self.mpr.pressure
+        return mbar
+
     def calibrate(self):
+        ''' Measure pressure over time that can be used as offsets for measurments in the future '''
         p1s = []
         p2s = []
         for _ in range(self.calibration_points):
@@ -68,7 +71,10 @@ class PressureHandler:
 
 def shortest_distance(x, y):
     # Calculates the shortest distance to line via https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
-    numerator = math.fabs((P2.y - P1.y) * x - (P2.x - P1.x) * y + P2.x*P1.y - P2.y*P1.x)
-    denom = math.sqrt((P2.y - P1.y)**2 + (P2.x - P1.x)**2)
-    distance = numerator / denom
+    numerator = (P2.y - P1.y) * x - (P2.x -
+                                     P1.x) * y + P2.x * P1.y - P2.y * P1.x
+    numerator = math.fabs(numerator)
+
+    denominator = math.sqrt((P2.y - P1.y)**2 + (P2.x - P1.x)**2)
+    distance = numerator / denominator
     return distance
